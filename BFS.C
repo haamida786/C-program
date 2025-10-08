@@ -1,104 +1,54 @@
+
 #include <stdio.h>
-#include <stdlib.h>
+#include <conio.h>
 
-#define bool int
-#define true 1
-#define false 0
+#define MAX 10
 
-// Structure to represent a node in the adjacency list
-typedef struct Node {
-    int vertex;
-    struct Node* next;
-} Node;
+int adj[MAX][MAX];
+int visited[MAX];
+int queue[MAX];
+int front = 0, rear = -1;
 
-// Structure to represent the graph
-typedef struct Graph {
-    int numVertices;
-    Node** adjLists;
-    bool* visited;
-} Graph;
+void bfs(int start, int n) {
+    int i, current;
+    visited[start] = 1;
+    queue[++rear] = start;
 
-// Function to create a new node
-Node* createNode(int v) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->vertex = v;
-    newNode->next = NULL;
-    return newNode;
-}
+    while (front <= rear) {
+        current = queue[front++];
+        printf("%d ", current);
 
-// Function to create a graph
-Graph* createGraph(int vertices) {
-    Graph* graph = (Graph*)malloc(sizeof(Graph));
-    int i;
-    graph->numVertices = vertices;
-    graph->adjLists = (Node**)malloc(vertices * sizeof(Node*));
-    graph->visited = (bool*)malloc(vertices * sizeof(bool));
-    for (i = 0; i < vertices; i++)
-        graph->adjLists[i] = NULL;
-        graph->visited[i] = false;
-
-    return graph;
-}
-
-// Function to add an edge to the graph
-void addEdge(Graph* graph, int src, int dest) {
-    Node* newNode = createNode(dest);
-    newNode->next = graph->adjLists[src];
-    graph->adjLists[src] = newNode;
-
-    newNode = createNode(src);
-    newNode->next = graph->adjLists[dest];
-    graph->adjLists[dest] = newNode;
-}
-
-// Function to implement BFS
-void bfs(Graph* graph, int startVertex) {
-    int queue[100];
-    int front = 0, rear = 0;
-    int currentVertex, adjVertex;
-    Node* temp;
-
-    graph->visited[startVertex] = true;
-    queue[rear++] = startVertex;
-
-    while (front < rear) {
-	currentVertex = queue[front++];
-	printf("%d ", currentVertex);
-
-	temp = graph->adjLists[currentVertex];
-        while (temp) {
-	    adjVertex = temp->vertex;
-	    if (!graph->visited[adjVertex]) {
-                graph->visited[adjVertex] = true;
-                queue[rear++] = adjVertex;
+        for (i = 0; i < n; i++) {
+            if (adj[current][i] == 1 && !visited[i]) {
+                visited[i] = 1;
+                queue[++rear] = i;
             }
-            temp = temp->next;
         }
     }
 }
 
-int main() {
-    int numVertices = 6;
-    Graph* graph = createGraph(numVertices);
+void main() {
+    int n, edges, i, src, dest, start;
+    clrscr();
 
-    addEdge(graph, 0, 1);
-    addEdge(graph, 0, 2);
-    addEdge(graph, 1, 3);
-    addEdge(graph, 1, 4);
-    addEdge(graph, 2, 5);
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
 
-    printf("BFS Traversal starting from vertex 0: ");
-    bfs(graph, 0);
-    printf("\n");
+    printf("Enter number of edges: ");
+    scanf("%d", &edges);
 
-    printf("BFS 0: ");
-    bfs(graph, 0);
-    printf("\n");
+    for (i = 0; i < edges; i++) {
+        printf("Enter edge (src dest): ");
+        scanf("%d %d", &src, &dest);
+        adj[src][dest] = 1;
+        adj[dest][src] = 1;  
+    }
 
-    printf("BFS 0: ");
-    bfs(graph, 0);
-    printf("\n");
+    printf("Enter starting vertex: ");
+    scanf("%d", &start);
 
-    return 0;
+    printf("BFS traversal: ");
+    bfs(start, n);
+
+    getch();
 }
-
