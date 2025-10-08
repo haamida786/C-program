@@ -1,79 +1,61 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-struct node { 
-int vertex; 
-struct node* next; 
-}; 
-struct node* createNode(int v); 
-struct Graph { 
-int numVertices; 
-int* visited; 
-struct node** adjLists; 
-}; 
+#include <stdio.h>
+#include <conio.h>
 
-void DFS(struct Graph* graph, int vertex) { 
-struct node* adjList = graph->adjLists[vertex]; 
-struct node* temp = adjList; 
-graph->visited[vertex] = 1; 
-printf("Visited %d \n", vertex); 
-while (temp != NULL) { 
-int connectedVertex = temp->vertex; 
-if (graph->visited[connectedVertex] == 0) { 
-DFS(graph, connectedVertex); 
-} 
-temp = temp->next; 
-} 
-} 
+#define MAX 4
 
-struct node* createNode(int v) { 
-struct node* newNode = malloc(sizeof(struct node)); 
-newNode->vertex = v; 
-newNode->next = NULL; 
-return newNode; 
-} 
+int adj[MAX][MAX];
+int visited[MAX];
+int n = 4;
 
-struct Graph* createGraph(int vertices) { 
-struct Graph* graph = malloc(sizeof(struct Graph));
-int i;
-graph->numVertices = vertices; 
-graph->adjLists = malloc(vertices * sizeof(struct node*)); 
-graph->visited = malloc(vertices * sizeof(int)); 
 
-for (i = 0; i < vertices; i++) { 
-graph->adjLists[i] = NULL; 
-graph->visited[i] = 0; 
-} 
-return graph; 
-} 
-void addEdge(struct Graph* graph, int src, int dest) { 
-struct node* newNode = createNode(dest); 
-newNode->next = graph->adjLists[src]; 
-graph->adjLists[src] = newNode; 
+void DFS(int vertex) {
+    int i;
+    visited[vertex] = 1;
+    printf("Visited %d \n", vertex);
 
-newNode = createNode(src); 
-newNode->next = graph->adjLists[dest]; 
-graph->adjLists[dest] = newNode; 
-} 
-void printGraph(struct Graph* graph) { 
-int v; 
-for (v = 0; v < graph->numVertices; v++) { 
-struct node* temp = graph->adjLists[v]; 
-printf("\n Adjacency list of vertex %d\n ", v); 
-while (temp) { 
-printf("%d -> ", temp->vertex); 
-temp = temp->next; 
-} 
-printf("\n"); 
-} 
-} 
-int main() { 
-struct Graph* graph = createGraph(4);
-clrscr();
-addEdge(graph, 0, 1); 
-addEdge(graph, 0, 2); 
-addEdge(graph, 1, 2); 
-addEdge(graph, 2, 3); 
-printGraph(graph); 
-DFS(graph, 2); 
-return 0; 
-} 
+    for (i = n - 1; i >= 0; i--) { 
+        if (adj[vertex][i] == 1 && visited[i] == 0) {
+            DFS(i);
+        }
+    }
+}
+
+
+void printGraph() {
+    int i, j;
+    for (i = 0; i < n; i++) {
+        printf("\n Adjacency list of vertex %d\n ", i);
+        for (j = n - 1; j >= 0; j--) {
+            if (adj[i][j] == 1)
+                printf("%d -> ", j);
+        }
+        printf("\n");
+    }
+}
+
+void main() {
+    int edges[4][2] = { {0,1}, {0,2}, {1,2}, {2,3} };
+    int i, j;
+
+    clrscr();
+
+    // Initialize adjacency matrix and visited array
+    for (i = 0; i < n; i++) {
+        visited[i] = 0;
+        for (j = 0; j < n; j++)
+            adj[i][j] = 0;
+    }
+
+   
+    for (i = 0; i < 4; i++) {
+        int src = edges[i][0];
+        int dest = edges[i][1];
+        adj[src][dest] = 1;
+        adj[dest][src] = 1;
+    }
+
+    printGraph();
+    DFS(2);
+
+    getch();
+}
