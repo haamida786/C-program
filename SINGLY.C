@@ -3,84 +3,72 @@
 #include <stdlib.h> 
 struct node  
 { 
-int data; 
-struct node *link; 
+	int data; 
+	struct node *link; 
 }; 
 struct node *head = NULL; 
 void insert_at_front(int value)  
 { 
-struct node *newnode = (struct node *)malloc(sizeof(struct node)); 
-newnode->data = value; 
-newnode->link = head; 
-head = newnode; 
+	struct node *newnode = (struct node *)malloc(sizeof(struct node)); 
+	newnode->data = value; 
+	newnode->link = head; 
+	head = newnode; 
 }
 
 void insert_at_end(int value)
 {
-struct node *newnode = (struct node *)malloc(sizeof(struct node));
-newnode->data = value;
-newnode->link = NULL;
-if (head == NULL)
-{
-head = newnode;
-}
-else
-{
-struct node *temp = head;
-while (temp->link != NULL)
-{
-temp = temp->link;
-}
-temp->link = newnode;
-}
+	struct node *newnode = (struct node *)malloc(sizeof(struct node));
+	newnode->data = value;
+	newnode->link = NULL;
+	if (head == NULL){
+		head = newnode;
+	} else{
+		struct node *temp = head;
+		while (temp->link != NULL){
+			temp = temp->link;
+		}
+		temp->link = newnode;
+	}
 }
 
-void delete_node(int value)
-{
-struct node *temp = head, *prev = NULL;
-if (temp != NULL && temp->data == value)
-{
-head = temp->link;
-free(temp);
-printf("Node with value %d deleted.\n", value);
-return;
-}
-while (temp != NULL && temp->data != value)
-{
-prev = temp;
-temp = temp->link;
-}
-if (temp == NULL)
-{
-printf("Node with value %d not found.\n", value);
-return;
-}
-prev->link = temp->link;
-free(temp);
-printf("Node with value %d deleted.\n", value);
+void delete_node(int value){
+	struct node *temp = head, *prev = NULL;
+	if (temp != NULL && temp->data == value){
+		head = temp->link;
+		free(temp);
+		printf("Node with value %d deleted.\n", value);
+		return;
+	}
+	while (temp != NULL && temp->data != value){
+		prev = temp;
+		temp = temp->link;
+	}
+	if (temp == NULL){
+		printf("Node with value %d not found.\n", value);
+		return;
+	}
+	prev->link = temp->link;
+	free(temp);
+	printf("Node with value %d deleted.\n", value);
 }
 
-void display()
-{
-struct node *temp = head;
-if (temp == NULL) {
-printf("List is empty.\n");
-return;
+void display(){
+	struct node *temp = head;
+	if (temp == NULL) {
+		printf("List is empty.\n");
+		return;
+	}
+	printf("Linked List: ");
+	while (temp != NULL){
+		printf("%d -> ", temp->data);
+		temp = temp->link;
+	}
+	printf("NULL\n");
 }
-printf("Linked List: ");
-while (temp != NULL)
-{
-printf("%d -> ", temp->data);
-temp = temp->link;
-}
-printf("NULL\n");
-}
-void main()
-{
-int choice, value, key;
-clrscr();
-while (1)
-{
+void main(){
+	int choice, value, key;
+	clrscr();
+	while (1){
 
 
 
@@ -123,4 +111,5 @@ while (1)
     }
 getch();
 }
+
 
